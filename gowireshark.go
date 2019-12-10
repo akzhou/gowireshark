@@ -38,8 +38,29 @@ func wireShark(deviceName string,port uint16)  {
 			fmt.Println("unexpected packet")
 			continue
 		}
-		applicationLayer := packet.ApplicationLayer()
-		fmt.Printf("applicationLayer:%v\n",applicationLayer)
+
+		//tcpLayer := packet.Layer(layers.LayerTypeTCP)
+		//if tcpLayer != nil {
+		//	tcp, _ := tcpLayer.(*layers.TCP)
+		//	// TCP layer variables:
+		//	// SrcPort, DstPort, Seq, Ack, DataOffset, Window, Checksum, Urgent
+		//	// Bool flags: FIN, SYN, RST, PSH, ACK, URG, ECE, CWR, NS
+		//	fmt.Printf("From ip:port %d to %d\n", tcp.SrcPort, tcp.DstPort)
+		//	fmt.Println("Sequence number: ", tcp.Seq)
+		//	fmt.Println()
+		//}
+		//
+		//applicationLayer := packet.ApplicationLayer()
+		//if  applicationLayer!= nil{
+		//	fmt.Printf("applicationLayer:%v\n",applicationLayer)
+		//}
+		fmt.Printf("packet:%v\n",packet)
+
+		// tcp 层
+		tcp := packet.TransportLayer().(*layers.TCP)
+		fmt.Printf("tcp:%v\n", tcp)
+		// tcp payload，也即是tcp传输的数据
+		fmt.Printf("tcp payload:%v\n", tcp.Payload)
 	}
 }
 
