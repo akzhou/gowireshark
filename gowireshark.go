@@ -67,38 +67,21 @@ func wireShark(deviceName string, port uint16) {
 			fmt.Println("Trouble decoding layers: ", err)
 		}
 
-		//for _, layerType := range foundLayerTypes {
-		//
-		//
-		//
-		//	var srcIP, srcPort, dstIP, dstPort string
-		//	if layerType == layers.LayerTypeIPv4 {
-		//		srcIP = ipLayer.SrcIP.String()
-		//		dstIP = ipLayer.DstIP.String()
-		//	}
-		//	if layerType == layers.LayerTypeTCP {
-		//		srcPort = tcpLayer.SrcPort.String()
-		//		dstPort = tcpLayer.DstPort.String()
-		//		//fmt.Println("TCP SYN:", tcpLayer.SYN, " | ACK:", tcpLayer.ACK)
-		//	}
-		//	if srcIP == "" || srcPort == "" || dstIP == "" || dstPort == "" {
-		//		continue
-		//	}
-		//	fmt.Printf("%s:%s -> %s:%s", srcIP, srcPort, dstIP, dstPort)
-		//}
+		for _, layerType := range foundLayerTypes {
+			var srcIP, srcPort, dstIP, dstPort string
+			if layerType == layers.LayerTypeIPv4 {
+				srcIP = ipLayer.SrcIP.String()
+				dstIP = ipLayer.DstIP.String()
+			}
+			if layerType == layers.LayerTypeTCP {
+				srcPort = tcpLayer.SrcPort.String()
+				dstPort = tcpLayer.DstPort.String()
+				//fmt.Println("TCP SYN:", tcpLayer.SYN, " | ACK:", tcpLayer.ACK)
+			}
 
-		ipLayer := packet.Layer(layers.LayerTypeIPv4)
-		if ipLayer != nil {
-
+			fmt.Printf("%s:%s -> %s:%s\n", srcIP, srcPort, dstIP, dstPort)
 		}
 
-		fmt.Printf("packet:%v\n", packet)
-
-		// tcp 层
-		tcp := packet.TransportLayer().(*layers.TCP)
-		fmt.Printf("tcp:%v\n", tcp)
-		// tcp payload，也即是tcp传输的数据
-		fmt.Printf("tcp payload:%v\n", tcp.Payload)
 	}
 }
 
