@@ -16,10 +16,10 @@ import (
 )
 
 func main()  {
-	WireShark("eth0",uint16(12345))
+	wireShark("eth0",uint16(12345))
 }
 
-func WireShark(deviceName string,port uint16)  {
+func wireShark(deviceName string,port uint16)  {
 	filter := getFilter(port)
 	handle, err :=pcap.OpenLive(deviceName, int32(65535), true, pcap.BlockForever)
 	if err != nil {
@@ -38,14 +38,8 @@ func WireShark(deviceName string,port uint16)  {
 			fmt.Println("unexpected packet")
 			continue
 		}
-
-		fmt.Printf("packet:%v\n",packet)
-
-		// tcp 层
-		tcp := packet.TransportLayer().(*layers.TCP)
-		fmt.Printf("tcp:%v\n", tcp)
-		// tcp payload，也即是tcp传输的数据
-		fmt.Printf("tcp payload:%v\n", tcp.Payload)
+		applicationLayer := packet.ApplicationLayer()
+		fmt.Printf("applicationLayer:%v\n",applicationLayer)
 	}
 }
 
