@@ -66,9 +66,9 @@ func wireShark(deviceName string, port uint16) {
 		if err != nil {
 			fmt.Println("Trouble decoding layers: ", err)
 		}
-
+		var srcIP, srcPort, dstIP, dstPort string
 		for _, layerType := range foundLayerTypes {
-			var srcIP, srcPort, dstIP, dstPort string
+
 			if layerType == layers.LayerTypeIPv4 {
 				srcIP = ipLayer.SrcIP.String()
 				dstIP = ipLayer.DstIP.String()
@@ -79,8 +79,8 @@ func wireShark(deviceName string, port uint16) {
 				//fmt.Println("TCP SYN:", tcpLayer.SYN, " | ACK:", tcpLayer.ACK)
 			}
 
-			fmt.Printf("%s:%s -> %s:%s\n", srcIP, srcPort, dstIP, dstPort)
 		}
+		fmt.Printf("%s:%s -> %s:%s\n", srcIP, srcPort, dstIP, dstPort)
 
 	}
 }
