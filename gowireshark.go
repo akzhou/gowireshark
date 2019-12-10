@@ -78,6 +78,9 @@ func wireShark(deviceName string, port uint16) {
 				dstPort = tcpLayer.DstPort.String()
 				//fmt.Println("TCP SYN:", tcpLayer.SYN, " | ACK:", tcpLayer.ACK)
 			}
+			if srcIP == "" || srcPort == "" || dstIP == "" || dstPort == "" {
+				continue
+			}
 			fmt.Printf("%s:%s -> %s:%s", srcIP, srcPort, dstIP, dstPort)
 		}
 
