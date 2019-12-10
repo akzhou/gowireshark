@@ -15,13 +15,25 @@ import (
 	"github.com/google/gopacket/pcap"
 )
 
-func main()  {
-	wireShark("eth0",uint16(12345))
+func main() {
+	wireShark("eth0", uint16(12345))
 }
 
-func wireShark(deviceName string,port uint16)  {
+var (
+	device      = "eth0"
+	snapshotLen = int32(65535)
+	promiscuous = false
+	err         error
+	timeout     = pcap.BlockForever
+	handle      *pcap.Handle
+	ethLayer    layers.Ethernet
+	ipLayer     layers.IPv4
+	tcpLayer    layers.TCP
+)
+
+func wireShark(deviceName string, port uint16) {
 	filter := getFilter(port)
-	handle, err :=pcap.OpenLive(deviceName, int32(65535), true, pcap.BlockForever)
+	handle, err := pcap.OpenLive(deviceName, snapshotLen, promiscuous, timeout)
 	if err != nil {
 		fmt.Printf("pcap open live failed: %v", err)
 		return
@@ -31,41 +43,57 @@ func wireShark(deviceName string,port uint16)  {
 		return
 	}
 	defer handle.Close()
+
 	packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
 	packetSource.NoCopy = true
+
 	for packet := range packetSource.Packets() {
 		if packet.NetworkLayer() == nil || packet.TransportLayer() == nil || packet.TransportLayer().LayerType() != layers.LayerTypeTCP {
 			fmt.Println("unexpected packet")
 			continue
 		}
 
-		//tcpLayer := packet.Layer(layers.LayerTypeTCP)
-		//if tcpLayer != nil {
-		//	tcp, _ := tcpLayer.(*layers.TCP)
-		//	// TCP layer variables:
-		//	// SrcPort, DstPort, Seq, Ack, DataOffset, Window, Checksum, Urgent
-		//	// Bool flags: FIN, SYN, RST, PSH, ACK, URG, ECE, CWR, NS
-		//	fmt.Printf("From ip:port %d to %d\n", tcp.SrcPort, tcp.DstPort)
-		//	fmt.Println("Sequence number: ", tcp.Seq)
-		//	fmt.Println()
+		parser := gopacket.NewDecodingLayerParser(
+			layers.LayerTypeEthernet,
+			&ethLayer,
+			&ipLayer,
+			&tcpLayer,
+		)
+
+		var foundLayerTypes []gopacket.LayerType
+		err := parser.DecodeLayers(packet.Data(), &foundLayerTypes)
+
+		if err != nil {
+			fmt.Println("Trouble decoding layers: ", err)
+		}
+
+		for _, layerType := range foundLayerTypes {
+			if layerType == layers.LayerTypeIPv4 {
+				fmt.Println("IPv4: ", ipLayer.SrcIP, "->", ipLayer.DstIP)
+			}
+			if layerType == layers.LayerTypeTCP {
+				fmt.Println("TCP Port: ", tcpLayer.SrcPort, "->", tcpLayer.DstPort)
+				fmt.Println("TCP SYN:", tcpLayer.SYN, " | ACK:", tcpLayer.ACK)
+			}
+		}
+
+		//ipLayer := packet.Layer(layers.LayerTypeIPv4)
+		//if ipLayer != nil {
+		//
 		//}
 		//
-		//applicationLayer := packet.ApplicationLayer()
-		//if  applicationLayer!= nil{
-		//	fmt.Printf("applicationLayer:%v\n",applicationLayer)
-		//}
-		fmt.Printf("packet:%v\n",packet)
-
-		// tcp 层
-		tcp := packet.TransportLayer().(*layers.TCP)
-		fmt.Printf("tcp:%v\n", tcp)
-		// tcp payload，也即是tcp传输的数据
-		fmt.Printf("tcp payload:%v\n", tcp.Payload)
+		//fmt.Printf("packet:%v\n", packet)
+		//
+		//// tcp 层
+		//tcp := packet.TransportLayer().(*layers.TCP)
+		//fmt.Printf("tcp:%v\n", tcp)
+		//// tcp payload，也即是tcp传输的数据
+		//fmt.Printf("tcp payload:%v\n", tcp.Payload)
 	}
 }
 
 //定义过滤器
 func getFilter(port uint16) string {
-	filter := fmt.Sprintf("tcp and ((src port %v) or (dst port %v))",  port, port)
+	filter := fmt.Sprintf("tcp and ((src port %v) or (dst port %v))", port, port)
 	return filter
 }
