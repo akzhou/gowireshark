@@ -68,13 +68,17 @@ func wireShark(deviceName string, port uint16) {
 		}
 
 		for _, layerType := range foundLayerTypes {
+			var srcIP, srcPort, dstIP, dstPort string
 			if layerType == layers.LayerTypeIPv4 {
-				fmt.Println("IPv4: ", ipLayer.SrcIP, "->", ipLayer.DstIP)
+				srcIP = ipLayer.SrcIP.String()
+				dstIP = ipLayer.DstIP.String()
 			}
 			if layerType == layers.LayerTypeTCP {
-				fmt.Println("TCP Port: ", tcpLayer.SrcPort, "->", tcpLayer.DstPort)
-				fmt.Println("TCP SYN:", tcpLayer.SYN, " | ACK:", tcpLayer.ACK)
+				srcPort = tcpLayer.SrcPort.String()
+				dstPort = tcpLayer.DstPort.String()
+				//fmt.Println("TCP SYN:", tcpLayer.SYN, " | ACK:", tcpLayer.ACK)
 			}
+			fmt.Printf("%s:%s -> %s:%s", srcIP, srcPort, dstIP, dstPort)
 		}
 
 		//ipLayer := packet.Layer(layers.LayerTypeIPv4)
