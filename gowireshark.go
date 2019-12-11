@@ -11,5 +11,5 @@ package main
 import "gowireshark/pkg"
 
 func main() {
-	pkg.WireShark("eth0", 12345)
+	pkg.WireShark("eth0", 80)
 }
