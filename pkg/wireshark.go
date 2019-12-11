@@ -72,7 +72,7 @@ func WireShark(deviceName string, port uint16) {
 		applicationLayer := packet.ApplicationLayer()
 		if applicationLayer == nil {
 			log.Warn("applicationLayer is nil")
-
+			continue
 		}
 
 		key := fmt.Sprintf("%s:%s", dstIP, dstPort)
