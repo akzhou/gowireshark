@@ -70,14 +70,18 @@ func WireShark(deviceName string, port uint16) {
 		}
 
 		applicationLayer := packet.ApplicationLayer()
-		if applicationLayer != nil {
-			fmt.Printf("Payload:%s\n", string(applicationLayer.Payload()))
+		if applicationLayer == nil {
+			log.Warn("applicationLayer is nil")
+
 		}
-
-		if v, ok := portTraffic.Load(fmt.Sprintf("%s:%s", dstIP, dstPort)); ok {
-			fmt.Println(v)
+		fmt.Printf("Payload:%d\n", len(applicationLayer.Payload()))
+		key := fmt.Sprintf("%s:%s", dstIP, dstPort)
+		if value, ok := portTraffic.Load(key); ok {
+			if v, ok := value.(int); ok {
+				portTraffic.Store(key, v+len(applicationLayer.Payload()))
+			}
 		} else {
-
+			portTraffic.Store(key, len(applicationLayer.Payload()))
 		}
 	}
 }
