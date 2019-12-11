@@ -8,14 +8,8 @@
 
 package main
 
-import (
-	"fmt"
-	"github.com/gomodule/redigo/redis"
-	"github.com/google/gopacket"
-	"github.com/google/gopacket/layers"
-	"github.com/google/gopacket/pcap"
-)
+import "gowireshark/pkg"
 
 func main() {
-	wireShark("eth0", uint16(12345))
+	pkg.WireShark("eth0", 12345)
 }

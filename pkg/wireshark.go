@@ -20,15 +20,9 @@ import (
 )
 
 var (
-	device      = "eth0"
 	snapshotLen = int32(65535)
 	promiscuous = false
-	err         error
 	timeout     = pcap.BlockForever
-	handle      *pcap.Handle
-	ethLayer    layers.Ethernet
-	ipLayer     layers.IPv4
-	tcpLayer    layers.TCP
 	portTraffic sync.Map
 )
 
@@ -54,36 +48,36 @@ func WireShark(deviceName string, port uint16) {
 			continue
 		}
 
-		parser := gopacket.NewDecodingLayerParser(
-			layers.LayerTypeEthernet,
-			&ethLayer,
-			&ipLayer,
-			&tcpLayer,
-		)
-
-		var foundLayerTypes []gopacket.LayerType
-		err := parser.DecodeLayers(packet.Data(), &foundLayerTypes)
-
-		if err != nil {
-			fmt.Println("Trouble decoding layers: ", err)
-		}
 		var srcIP, srcPort, dstIP, dstPort string
-		for _, layerType := range foundLayerTypes {
-			if layerType == layers.LayerTypeIPv4 {
-				srcIP = ipLayer.SrcIP.String()
-				dstIP = ipLayer.DstIP.String()
-			}
-			if layerType == layers.LayerTypeTCP {
-				srcPort = tcpLayer.SrcPort.String()
-				dstPort = tcpLayer.DstPort.String()
-			}
+
+		ipLayer := packet.Layer(layers.LayerTypeIPv4)
+		if ipLayer != nil {
+			ip, _ := ipLayer.(*layers.IPv4)
+			srcIP = ip.SrcIP.String()
+			dstIP = ip.DstIP.String()
 		}
+
+		tcpLayer := packet.Layer(layers.LayerTypeTCP)
+		if tcpLayer != nil {
+			tcp, _ := tcpLayer.(*layers.TCP)
+			srcPort = tcp.SrcPort.String()
+			dstPort = tcp.DstPort.String()
+		}
+
 		log.Infof("%s:%s  ->  %s:%s", srcIP, srcPort, dstIP, dstPort)
 		if !strings.Contains(srcPort, strconv.Itoa(int(port))) {
 			continue
 		}
+
+		applicationLayer := packet.ApplicationLayer()
+		if applicationLayer != nil {
+			fmt.Printf("Payload:%s\n", string(applicationLayer.Payload()))
+		}
+
 		if v, ok := portTraffic.Load(fmt.Sprintf("%s:%s", dstIP, dstPort)); ok {
 			fmt.Println(v)
+		} else {
+
 		}
 	}
 }
