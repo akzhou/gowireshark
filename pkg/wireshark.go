@@ -81,6 +81,7 @@ func WireShark(deviceName string, port uint16) {
 				portTraffic.Store(key, v+len(applicationLayer.Payload()))
 				log.Infof("%s:%d", key, v+len(applicationLayer.Payload()))
 				log.Infof("layerContents:%s", applicationLayer.LayerContents())
+				log.Infof("layerContents:%s", applicationLayer.LayerPayload())
 			}
 		} else {
 			portTraffic.Store(key, len(applicationLayer.Payload()))
