@@ -30,11 +30,11 @@ func WireShark(deviceName string, port uint16) {
 	filter := getFilter(port)
 	handle, err := pcap.OpenLive(deviceName, snapshotLen, promiscuous, timeout)
 	if err != nil {
-		log.Error("pcap open live failed: %v", err)
+		log.Error(err)
 		return
 	}
 	if err := handle.SetBPFFilter(filter); err != nil {
-		fmt.Printf("set bpf filter failed: %v", err)
+		log.Error(err)
 		return
 	}
 	defer handle.Close()
@@ -80,8 +80,6 @@ func WireShark(deviceName string, port uint16) {
 			if v, ok := value.(int); ok {
 				portTraffic.Store(key, v+len(applicationLayer.Payload()))
 				log.Infof("%s:%d", key, v+len(applicationLayer.Payload()))
-				log.Infof("layerContents:%s", applicationLayer.LayerContents())
-				log.Infof("layerContents:%s", applicationLayer.LayerPayload())
 			}
 		} else {
 			portTraffic.Store(key, len(applicationLayer.Payload()))

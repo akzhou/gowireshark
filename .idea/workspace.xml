@@ -2,6 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c19625a5-aa13-41f3-9037-0d68a15c527c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/pkg/redis_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/redis.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/redis.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/wireshark.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/wireshark.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,25 +21,46 @@
         <entry file="file://$PROJECT_DIR$/gowireshark.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="540">
-              <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pkg/redis.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="432">
-              <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
+              <caret line="15" selection-start-line="15" selection-end-line="15" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pkg/redis.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="372">
+              <caret line="54" lean-forward="true" selection-start-line="54" selection-end-line="54" />
+              <folding>
+                <element signature="e#128#241#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pkg/redis_test.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="468">
+              <caret line="13" column="21" lean-forward="true" selection-start-line="13" selection-start-column="21" selection-end-line="13" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../pkg/mod/github.com/gomodule/redigo@v2.0.0+incompatible/redis/redis.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="268">
+              <caret line="35" column="4" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pkg/wireshark.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="560">
-              <caret line="83" column="78" lean-forward="true" selection-start-line="83" selection-start-column="78" selection-end-line="83" selection-end-column="78" />
+            <state relative-caret-position="444">
+              <caret line="36" column="22" selection-start-line="36" selection-start-column="22" selection-end-line="36" selection-end-column="22" />
               <folding>
                 <element signature="e#132#186#0" expanded="true" />
               </folding>
@@ -79,24 +105,6 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../pkg/mod/github.com/google/gopacket@v1.1.17/layers/ports.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="290">
-              <caret line="16" column="5" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../pkg/mod/github.com/google/gopacket@v1.1.17/layers/ip4.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
-              <caret line="54" column="4" selection-start-line="54" selection-start-column="4" selection-end-line="54" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../pkg/mod/github.com/google/gopacket@v1.1.17/packet.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="380">
@@ -123,15 +131,16 @@
       <list>
         <option value="$PROJECT_DIR$/pkg/packet.go" />
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/pkg/redis.go" />
         <option value="$PROJECT_DIR$/gowireshark.go" />
+        <option value="$PROJECT_DIR$/pkg/redis_test.go" />
         <option value="$PROJECT_DIR$/pkg/wireshark.go" />
+        <option value="$PROJECT_DIR$/pkg/redis.go" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="216" />
+    <option name="y" value="489" />
     <option name="width" value="1890" />
     <option name="height" value="960" />
   </component>
@@ -195,7 +204,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Go Test.TestIncrBy in gowireshark/pkg">
     <configuration name="go build gowireshark.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="gowireshark" />
       <working_directory value="$PROJECT_DIR$" />
@@ -203,23 +212,44 @@
       <filePath value="$PROJECT_DIR$/gowireshark.go" />
       <method v="2" />
     </configuration>
+    <configuration name="TestIncrBy in gowireshark/pkg" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="gowireshark" />
+      <working_directory value="$PROJECT_DIR$/pkg" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="gowireshark/pkg" />
+      <pattern value="^TestIncrBy$" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.TestIncrBy in gowireshark/pkg" />
         <item itemvalue="Go Build.go build gowireshark.go" />
       </list>
     </recent_temporary>
   </component>
+  <component name="TestHistory">
+    <history-entry file="TestIncrBy_in_gowireshark_pkg - 2019.12.11 at 18h 02m 19s.xml">
+      <configuration name="TestIncrBy in gowireshark/pkg" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestIncrBy_in_gowireshark_pkg - 2019.12.11 at 18h 15m 22s.xml">
+      <configuration name="TestIncrBy in gowireshark/pkg" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestIncrBy_in_gowireshark_pkg - 2019.12.11 at 18h 53m 56s.xml">
+      <configuration name="TestIncrBy in gowireshark/pkg" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+  </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.10341151" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14765458" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" />
       <window_info anchor="bottom" id="Version Control" />
-      <window_info active="true" anchor="bottom" id="Terminal" visible="true" weight="0.19821826" />
+      <window_info anchor="bottom" id="Terminal" weight="0.19265033" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -240,6 +270,24 @@
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
     <proxy>https://goproxy.io</proxy>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/pkg/redis.go</url>
+          <line>43</line>
+          <properties />
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/pkg/redis.go</url>
+          <line>51</line>
+          <properties />
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/go.sum">
@@ -338,23 +386,40 @@
     <entry file="file://$PROJECT_DIR$/gowireshark.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
-          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+          <caret line="15" selection-start-line="15" selection-end-line="15" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pkg/redis.go">
+    <entry file="file://$PROJECT_DIR$/../pkg/mod/github.com/gomodule/redigo@v2.0.0+incompatible/redis/redis.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
+        <state relative-caret-position="268">
+          <caret line="35" column="4" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pkg/wireshark.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="83" column="78" lean-forward="true" selection-start-line="83" selection-start-column="78" selection-end-line="83" selection-end-column="78" />
+        <state relative-caret-position="444">
+          <caret line="36" column="22" selection-start-line="36" selection-start-column="22" selection-end-line="36" selection-end-column="22" />
           <folding>
             <element signature="e#132#186#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pkg/redis_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="468">
+          <caret line="13" column="21" lean-forward="true" selection-start-line="13" selection-start-column="21" selection-end-line="13" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pkg/redis.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="372">
+          <caret line="54" lean-forward="true" selection-start-line="54" selection-end-line="54" />
+          <folding>
+            <element signature="e#128#241#0" expanded="true" />
           </folding>
         </state>
       </provider>
