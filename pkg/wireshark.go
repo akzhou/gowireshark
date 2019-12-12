@@ -73,6 +73,8 @@ func WireShark(deviceName string) {
 			dstPort = tcp.DstPort.String()
 		}
 
+		log.Infof("%s:%s  ->  %s:%s", srcIP, srcPort, dstIP, dstPort)
+
 		applicationLayer := packet.ApplicationLayer()
 		if applicationLayer == nil {
 			continue
@@ -81,7 +83,7 @@ func WireShark(deviceName string) {
 		//入口流量
 		if !strings.Contains(srcPort, strconv.Itoa(int(wireSharkCfg.FileServerPort))) {
 			inputPayloadStr := string(applicationLayer.Payload())
-			if strings.Contains(inputPayloadStr, "/files") {
+			if strings.Contains(inputPayloadStr, wireSharkCfg.UrlFlag) {
 				log.Info(inputPayloadStr)
 				requests := strings.Split(inputPayloadStr, " ")
 				if len(requests) < 2 {
