@@ -46,12 +46,12 @@ func WireShark(deviceName string, port uint16) {
 			continue
 		}
 
-		var srcIP, srcPort, dstIP, dstPort string
+		var srcPort, dstIP, dstPort string
 
 		ipLayer := packet.Layer(layers.LayerTypeIPv4)
 		if ipLayer != nil {
 			ip, _ := ipLayer.(*layers.IPv4)
-			srcIP = ip.SrcIP.String()
+			//srcIP = ip.SrcIP.String()
 			dstIP = ip.DstIP.String()
 		}
 
