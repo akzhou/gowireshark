@@ -161,6 +161,6 @@ func GetDownloading(udid, timestamp string) int {
 			}
 		}
 	}
-
+	log.Infof("download size:%v,file size:%v", downloadSize, fileSize)
 	return int(math.Min(float64(downloadSize)/float64(fileSize)*100, 100))
 }
