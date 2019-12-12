@@ -66,7 +66,7 @@ func WireShark(deviceName string, port uint16) {
 		if applicationLayer == nil {
 			continue
 		}
-		//log.Infof("%s:%s  ->  %s:%s", srcIP, srcPort, dstIP, dstPort)
+
 		//出口流量
 		if strings.Contains(srcPort, strconv.Itoa(int(port))) {
 			key := fmt.Sprintf("%s_%s", dstIP, dstPort)
@@ -75,8 +75,12 @@ func WireShark(deviceName string, port uint16) {
 		}
 
 		//入口流量统计
-
-		log.Infof("InPayload:%s", applicationLayer.Payload())
+		inputPayloadStr := string(applicationLayer.Payload())
+		if strings.Contains(inputPayloadStr, "/storage") {
+			requests := strings.Split(inputPayloadStr, " ")
+			log.Infof("method:%s,path:%s", requests[0], requests[1])
+		}
+		//log.Infof("InPayload:%s", applicationLayer.Payload())
 	}
 }
 
