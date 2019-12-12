@@ -72,7 +72,7 @@ func WireShark(deviceName string) {
 			srcPort = tcp.SrcPort.String()
 			dstPort = tcp.DstPort.String()
 		}
-		log.Infof("%s:%s  ->  %s:%s", srcIP, srcPort, dstIP, dstPort)
+		//log.Infof("%s:%s  ->  %s:%s", srcIP, srcPort, dstIP, dstPort)
 
 		applicationLayer := packet.ApplicationLayer()
 		if applicationLayer == nil {
@@ -110,7 +110,9 @@ func WireShark(deviceName string) {
 				}
 				udidTimestampIPPortMap.LoadOrStore(m["udid"][0]+"_"+m["timestamp"][0], srcIP+"_"+srcPort)
 				udidTimestampFileMap.LoadOrStore(m["udid"][0]+"_"+m["timestamp"][0], getFileSize(fileName))
-				iPPortFileMap.Store(srcIP+"_"+srcPort, 0)
+				log.Infof("udidTimestampIPPortMap(key:%v,value:%v)", m["udid"][0]+"_"+m["timestamp"][0], srcIP+"_"+srcPort)
+				log.Infof("udidTimestampFileMap(key:%v,value:%v)", m["udid"][0]+"_"+m["timestamp"][0], getFileSize(fileName))
+				//iPPortFileMap.Store(srcIP+"_"+srcPort, 0)
 			}
 		}
 
