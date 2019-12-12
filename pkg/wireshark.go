@@ -148,17 +148,23 @@ func GetDownloading(udid, timestamp string) int {
 	var fileSize, downloadSize int
 	if v, ok := udidTimestampFileMap.Load(udid + "_" + timestamp); ok {
 		if vv, ok := v.(int); ok {
+			log.Infof("GetDownloading.udidTimestampFileMap:%d", vv)
 			fileSize = vv
 		}
+
 	}
 	if v, ok := udidTimestampIPPortMap.Load(udid + "_" + timestamp); ok {
 		if vv, ok := v.(string); ok { //vv表示ip_port
+			log.Infof("GetDownloading.udidTimestampIPPortMap:%d", vv)
 			if vvv, ok := iPPortFileMap.Load(vv); ok { //vvv下载量
 				if vvvv, ok := vvv.(int); ok {
 					downloadSize = vvvv
 				}
+				log.Infof("GetDownloading.iPPortFileMap:%d", vvv)
 			}
+
 		}
+
 	}
 
 	return int(decimal(float64(downloadSize)/float64(fileSize))) * 100
