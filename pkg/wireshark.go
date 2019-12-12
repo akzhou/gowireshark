@@ -164,7 +164,7 @@ func GetDownloading(udid, timestamp string) int {
 		}
 	}
 
-	return int(decimal(float64(downloadSize)/float64(fileSize))) * 100
+	return int(decimal(float64(downloadSize)/float64(fileSize)) * 100)
 }
 
 func decimal(value float64) float64 {
