@@ -14,6 +14,7 @@ import (
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
 	log "github.com/sirupsen/logrus"
+	"math"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -122,7 +123,6 @@ func WireShark(deviceName string, port uint16) {
 			iPPortFileMap.Store(key, int64(len(applicationLayer.Payload())))
 		}
 		continue
-
 	}
 }
 
@@ -162,6 +162,5 @@ func GetDownloading(udid, timestamp string) int {
 		}
 	}
 
-	log.Infof("download size:v%,file size:v%", downloadSize, fileSize)
-	return int(float64(downloadSize) / float64(fileSize) * 100)
+	return int(math.Min(float64(downloadSize)/float64(fileSize)*100, 100))
 }
