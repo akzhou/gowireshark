@@ -115,8 +115,8 @@ func WireShark(deviceName string, port uint16) {
 		key := fmt.Sprintf("%s_%s", dstIP, dstPort)
 		//IncrBy(key, len(applicationLayer.Payload()))
 		if v, ok := iPPortFileMap.Load(key); ok {
-			if vv, ok := v.(int64); ok {
-				iPPortFileMap.Store(key, vv+int64(len(applicationLayer.Payload())))
+			if vv, ok := v.(int); ok {
+				iPPortFileMap.Store(key, vv+len(applicationLayer.Payload())
 			}
 		} else {
 			iPPortFileMap.Store(key, len(applicationLayer.Payload()))
@@ -154,8 +154,8 @@ func GetDownloading(udid, timestamp string) int {
 	if v, ok := udidTimestampIPPortMap.Load(udid + "_" + timestamp); ok {
 		if vv, ok := v.(string); ok { //vv表示ip_port
 			if vvv, ok := iPPortFileMap.Load(vv); ok { //vvv下载量
-				if vvvv, ok := vvv.(int64); ok {
-					downloadSize = vvvv
+				if vvvv, ok := vvv.(int); ok {
+					downloadSize = int64(vvvv)
 				}
 			}
 		}
