@@ -66,7 +66,7 @@ func WireShark(deviceName string, port uint16) {
 		if applicationLayer == nil {
 			continue
 		}
-		log.Infof("%s:%s  ->  %s:%s", srcIP, srcPort, dstIP, dstPort)
+		//log.Infof("%s:%s  ->  %s:%s", srcIP, srcPort, dstIP, dstPort)
 		//出口流量
 		if strings.Contains(srcPort, strconv.Itoa(int(port))) {
 			key := fmt.Sprintf("%s_%s", dstIP, dstPort)
