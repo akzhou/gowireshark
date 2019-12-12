@@ -103,7 +103,7 @@ func WireShark(deviceName string, port uint16) {
 					log.Error(err)
 					continue
 				}
-				if "" == m["udid"][0] || "" == m["timestamp"][0] {
+				if 0 == len(m["udid"]) || 0 == len(m["timestamp"]) {
 					log.Error(fmt.Errorf("udid and timestamp not nil"))
 					continue
 				}
