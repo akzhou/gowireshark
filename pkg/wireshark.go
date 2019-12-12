@@ -71,14 +71,14 @@ func WireShark(deviceName string, port uint16) {
 		}
 		//入口流量统计
 		if strings.Contains(srcPort, strconv.Itoa(int(port))) {
-			log.Infof("入口流量Payload:%s", applicationLayer.Payload())
+			log.Infof("InPayload:%s", applicationLayer.Payload())
 			continue
 		}
 
 		//出口流量统计
 
 		key := fmt.Sprintf("%s_%s", dstIP, dstPort)
-		log.Infof("出口流量Payload:%s", applicationLayer.Payload())
+		log.Infof("OutPayload:%s", applicationLayer.Payload())
 		IncrBy(key, len(applicationLayer.Payload()))
 	}
 }
