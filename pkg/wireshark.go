@@ -14,14 +14,25 @@ import (
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
 	log "github.com/sirupsen/logrus"
+	"math"
+	"net/url"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 var (
 	snapshotLen = int32(65535)
 	promiscuous = false
 	timeout     = pcap.BlockForever
+)
+
+var (
+	udidTimestampIPPortMap sync.Map
+	udidTimestampFileMap   sync.Map
+	iPPortFileMap          sync.Map
 )
 
 func WireShark(deviceName string, port uint16) {
@@ -46,12 +57,12 @@ func WireShark(deviceName string, port uint16) {
 			continue
 		}
 
-		var srcPort, dstIP, dstPort string
+		var srcIP, srcPort, dstIP, dstPort string
 
 		ipLayer := packet.Layer(layers.LayerTypeIPv4)
 		if ipLayer != nil {
 			ip, _ := ipLayer.(*layers.IPv4)
-			//srcIP = ip.SrcIP.String()
+			srcIP = ip.SrcIP.String()
 			dstIP = ip.DstIP.String()
 		}
 
@@ -67,20 +78,52 @@ func WireShark(deviceName string, port uint16) {
 			continue
 		}
 
-		//出口流量
-		if strings.Contains(srcPort, strconv.Itoa(int(port))) {
-			key := fmt.Sprintf("%s_%s", dstIP, dstPort)
-			IncrBy(key, len(applicationLayer.Payload()))
-			continue
+		//入口流量
+		if !strings.Contains(srcPort, strconv.Itoa(int(port))) {
+			inputPayloadStr := string(applicationLayer.Payload())
+			if strings.Contains(inputPayloadStr, "/files") {
+				log.Info(inputPayloadStr)
+				requests := strings.Split(inputPayloadStr, " ")
+				if len(requests) < 2 {
+					continue
+				}
+				u, err := url.Parse(requests[1])
+				if nil != err {
+					log.Error(err)
+					continue
+				}
+				paths := strings.Split(u.Path, "/")
+				fileName := paths[len(paths)-1]
+				if "" == fileName {
+					log.Errorf("为获取到文件名")
+					continue
+				}
+				m, err := url.ParseQuery(u.RawQuery)
+				if nil != err {
+					log.Error(err)
+					continue
+				}
+				if "" == m["udid"][0] || "" == m["timestamp"][0] {
+					log.Error(fmt.Errorf("udid and timestamp not nil"))
+					continue
+				}
+				udidTimestampIPPortMap.LoadOrStore(m["udid"][0]+"_"+m["timestamp"][0], srcIP+"_"+srcPort)
+				udidTimestampFileMap.LoadOrStore(m["udid"][0]+"_"+m["timestamp"][0], getFileSize(fileName))
+			}
 		}
 
-		//入口流量统计
-		inputPayloadStr := string(applicationLayer.Payload())
-		if strings.Contains(inputPayloadStr, "/files") {
-			requests := strings.Split(inputPayloadStr, " ")
-			log.Infof("method:%s,path:%s", requests[0], requests[1])
+		//出口流量
+		key := fmt.Sprintf("%s_%s", dstIP, dstPort)
+		//IncrBy(key, len(applicationLayer.Payload()))
+		if v, ok := iPPortFileMap.Load(key); ok {
+			if vv, ok := v.(int); ok {
+				iPPortFileMap.Store(key, vv+len(applicationLayer.Payload()))
+			}
+		} else {
+			iPPortFileMap.Store(key, len(applicationLayer.Payload()))
 		}
-		//log.Infof("InPayload:%s", applicationLayer.Payload())
+		continue
+
 	}
 }
 
@@ -88,4 +131,39 @@ func WireShark(deviceName string, port uint16) {
 func getFilter(port uint16) string {
 	filter := fmt.Sprintf("tcp and ((src port %v) or (dst port %v))", port, port)
 	return filter
+}
+
+func getFileSize(fileName string) int64 {
+	fileName = wireSharkCfg.UrlPath + fileName
+	var result int64
+	filepath.Walk(fileName, func(path string, f os.FileInfo, err error) error {
+		result = f.Size()
+		return nil
+	})
+	return result
+}
+
+//TODO:获取下载进度
+func GetDownloading(udid, timestamp string) int {
+	var fileSize, downloadSize int
+	if v, ok := udidTimestampFileMap.Load(udid + "_" + timestamp); ok {
+		if vv, ok := v.(int); ok {
+			fileSize = vv
+		}
+	}
+	if v, ok := udidTimestampIPPortMap.Load(udid + "_" + timestamp); ok {
+		if vv, ok := v.(string); ok { //vv表示ip_port
+			if vvv, ok := iPPortFileMap.Load(vv); ok { //vvv下载量
+				if vvvv, ok := vvv.(int); ok {
+					downloadSize = vvvv
+				}
+			}
+		}
+	}
+
+	return int(decimal(float64(downloadSize)/float64(fileSize))) * 100
+}
+
+func decimal(value float64) float64 {
+	return math.Trunc(value*1e2+0.5) * 1e-2
 }
