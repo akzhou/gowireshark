@@ -14,7 +14,6 @@ import (
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
 	log "github.com/sirupsen/logrus"
-	"math"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -164,9 +163,5 @@ func GetDownloading(udid, timestamp string) int {
 		}
 	}
 
-	return int(decimal(float64(downloadSize)/float64(fileSize)) * 100)
-}
-
-func decimal(value float64) float64 {
-	return math.Trunc(value*1e2+0.5) * 1e-2
+	return int(float64(downloadSize) / float64(fileSize) * 100)
 }
