@@ -71,8 +71,11 @@ func WireShark(deviceName string) {
 			tcp, _ := tcpLayer.(*layers.TCP)
 			srcPort = tcp.SrcPort.String()
 			dstPort = tcp.DstPort.String()
-		}
 
+			if !tcp.ACK {
+				continue
+			}
+		}
 		log.Infof("%s:%s  ->  %s:%s", srcIP, srcPort, dstIP, dstPort)
 
 		applicationLayer := packet.ApplicationLayer()
