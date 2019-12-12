@@ -139,7 +139,7 @@ func getFileSize(fileName string) int64 {
 		result = f.Size()
 		return nil
 	})
-	log.Infof("%s的文件大小为：%d", fileName, result)
+	log.Infof("%s file size：%d", fileName, result)
 	return result
 }
 
@@ -148,10 +148,8 @@ func GetDownloading(udid, timestamp string) int {
 	var fileSize, downloadSize int
 	if v, ok := udidTimestampFileMap.Load(udid + "_" + timestamp); ok {
 		if vv, ok := v.(int); ok {
-			log.Infof("GetDownloading.udidTimestampFileMap:%d", vv)
 			fileSize = vv
 		}
-
 	}
 	if v, ok := udidTimestampIPPortMap.Load(udid + "_" + timestamp); ok {
 		if vv, ok := v.(string); ok { //vv表示ip_port
@@ -163,5 +161,6 @@ func GetDownloading(udid, timestamp string) int {
 		}
 	}
 
+	log.Infof("download size:d%,file size:d%", downloadSize, fileSize)
 	return int(float64(downloadSize) / float64(fileSize) * 100)
 }
