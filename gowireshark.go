@@ -36,4 +36,6 @@ func main() {
 			"data":    downloading,
 		})
 	})
+
+	router.Run(":8081")
 }
