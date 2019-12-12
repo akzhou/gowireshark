@@ -72,7 +72,7 @@ func WireShark(deviceName string, port uint16) {
 			log.Warn("applicationLayer is nil")
 			continue
 		}
-		key := fmt.Sprintf("%s:%s", dstIP, dstPort)
+		key := fmt.Sprintf("%s_%s", dstIP, dstPort)
 		IncrBy(key, len(applicationLayer.Payload()))
 	}
 }
