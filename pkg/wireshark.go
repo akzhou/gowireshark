@@ -62,24 +62,23 @@ func WireShark(deviceName string, port uint16) {
 			dstPort = tcp.DstPort.String()
 		}
 
-		log.Infof("%s:%s  ->  %s:%s", srcIP, srcPort, dstIP, dstPort)
-
 		applicationLayer := packet.ApplicationLayer()
 		if applicationLayer == nil {
-			log.Warn("applicationLayer is nil")
 			continue
 		}
-		//入口流量统计
+		log.Infof("%s:%s  ->  %s:%s", srcIP, srcPort, dstIP, dstPort)
+		//出口流量
 		if strings.Contains(srcPort, strconv.Itoa(int(port))) {
-			log.Infof("InPayload:%s", applicationLayer.Payload())
+			key := fmt.Sprintf("%s_%s", dstIP, dstPort)
+			//log.Infof("OutPayload:%s", applicationLayer.Payload())
+			IncrBy(key, len(applicationLayer.Payload()))
 			continue
 		}
 
-		//出口流量统计
-
-		key := fmt.Sprintf("%s_%s", dstIP, dstPort)
-		log.Infof("OutPayload:%s", applicationLayer.Payload())
-		IncrBy(key, len(applicationLayer.Payload()))
+		//入口流量统计
+		//key := fmt.Sprintf("%s_%s", dstIP, dstPort)
+		//log.Infof("OutPayload:%s", applicationLayer.Payload())
+		//IncrBy(key, len(applicationLayer.Payload()))
 	}
 }
 
