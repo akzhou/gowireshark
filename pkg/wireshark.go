@@ -116,7 +116,7 @@ func WireShark(deviceName string, port uint16) {
 		//IncrBy(key, len(applicationLayer.Payload()))
 		if v, ok := iPPortFileMap.Load(key); ok {
 			if vv, ok := v.(int64); ok {
-				iPPortFileMap.Store(key, vv+int64(len(applicationLayer.Payload()))
+				iPPortFileMap.Store(key, vv+int64(len(applicationLayer.Payload())))
 			}
 		} else {
 			iPPortFileMap.Store(key, int64(len(applicationLayer.Payload())))
