@@ -76,7 +76,7 @@ func WireShark(deviceName string, port uint16) {
 
 		//入口流量统计
 		inputPayloadStr := string(applicationLayer.Payload())
-		if strings.Contains(inputPayloadStr, "/storage") {
+		if strings.Contains(inputPayloadStr, "/files") {
 			requests := strings.Split(inputPayloadStr, " ")
 			log.Infof("method:%s,path:%s", requests[0], requests[1])
 		}
