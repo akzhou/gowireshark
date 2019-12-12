@@ -11,5 +11,5 @@ package pkg
 import "testing"
 
 func TestIncrBy(t *testing.T) {
-	IncrBy("test", 3)
+	IncrBy("test", 12)
 }

@@ -16,14 +16,12 @@ import (
 	log "github.com/sirupsen/logrus"
 	"strconv"
 	"strings"
-	"sync"
 )
 
 var (
 	snapshotLen = int32(65535)
 	promiscuous = false
 	timeout     = pcap.BlockForever
-	portTraffic sync.Map
 )
 
 func WireShark(deviceName string, port uint16) {
@@ -74,16 +72,8 @@ func WireShark(deviceName string, port uint16) {
 			log.Warn("applicationLayer is nil")
 			continue
 		}
-
 		key := fmt.Sprintf("%s:%s", dstIP, dstPort)
-		if value, ok := portTraffic.Load(key); ok {
-			if v, ok := value.(int); ok {
-				portTraffic.Store(key, v+len(applicationLayer.Payload()))
-				log.Infof("%s:%d", key, v+len(applicationLayer.Payload()))
-			}
-		} else {
-			portTraffic.Store(key, len(applicationLayer.Payload()))
-		}
+		IncrBy(key, len(applicationLayer.Payload()))
 	}
 }
 

@@ -49,10 +49,7 @@ func init() {
 	}
 	flag.StringVar(&confPath, "conf", tomlPath, "config path")
 
-	viper.SetConfigName("gowireshark")
-	viper.SetConfigType("toml")
-	viper.AddConfigPath(confPath)
-
+	viper.SetConfigFile(confPath)
 	if err := viper.ReadInConfig(); err != nil {
 		panic(err)
 	}
@@ -85,7 +82,7 @@ func IncrBy(key string, step int) {
 	if _, err := c.Do("INCRBY", key, step); err != nil {
 		log.Error(err)
 	}
-	if _, err := c.Do("EXPIRE", key, 5*60*60); err != nil {
+	if _, err := c.Do("EXPIRE", key, 5*60); err != nil {
 		log.Error(err)
 	}
 }
