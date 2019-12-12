@@ -73,6 +73,9 @@ func WireShark(deviceName string, port uint16) {
 			continue
 		}
 		key := fmt.Sprintf("%s_%s", dstIP, dstPort)
+
+		log.Infof("LayerPayload:", applicationLayer.LayerPayload())
+		log.Infof("LayerContents:", applicationLayer.LayerContents())
 		IncrBy(key, len(applicationLayer.Payload()))
 	}
 }
