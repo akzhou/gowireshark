@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	go pkg.WireShark("eth0", 80)
+	go pkg.WireShark("eth0")
 
 	router := gin.Default()
 	//TODO:获取下载进度

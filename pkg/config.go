@@ -16,8 +16,9 @@ import (
 )
 
 type WireSharkConfig struct {
-	UrlFlag string
-	UrlPath string
+	UrlFlag        string
+	UrlPath        string
+	FileServerPort uint16
 	//Redis   []struct {
 	//	Name         string
 	//	Addr         string
@@ -65,5 +66,9 @@ func init() {
 
 	if wireSharkCfg.UrlPath == "" {
 		panic(fmt.Errorf("未配置UrlPath"))
+	}
+
+	if wireSharkCfg.FileServerPort == 0 {
+		panic(fmt.Errorf("未配置FileServerPort"))
 	}
 }

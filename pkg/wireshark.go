@@ -35,8 +35,8 @@ var (
 	iPPortFileMap          sync.Map
 )
 
-func WireShark(deviceName string, port uint16) {
-	filter := getFilter(port)
+func WireShark(deviceName string) {
+	filter := getFilter(wireSharkCfg.FileServerPort)
 	handle, err := pcap.OpenLive(deviceName, snapshotLen, promiscuous, timeout)
 	if err != nil {
 		log.Error(err)
@@ -79,7 +79,7 @@ func WireShark(deviceName string, port uint16) {
 		}
 
 		//入口流量
-		if !strings.Contains(srcPort, strconv.Itoa(int(port))) {
+		if !strings.Contains(srcPort, strconv.Itoa(int(wireSharkCfg.FileServerPort))) {
 			inputPayloadStr := string(applicationLayer.Payload())
 			if strings.Contains(inputPayloadStr, "/files") {
 				log.Info(inputPayloadStr)
