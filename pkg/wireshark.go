@@ -24,7 +24,7 @@ import (
 )
 
 var (
-	snapshotLen = int32(65535)
+	snapshotLen = int32(65536)
 	promiscuous = false
 	timeout     = pcap.BlockForever
 )
