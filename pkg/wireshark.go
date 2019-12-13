@@ -114,10 +114,8 @@ func WireShark(deviceName string) {
 			}
 		}
 
-		log.Infof("%s:%s  ->  %s:%s", srcIP, srcPort, dstIP, dstPort)
-
 		//出口流量
-		key := fmt.Sprintf("%s_%s", dstIP, dstPort)
+		key := dstIP + "_" + dstPort
 		//IncrBy(key, len(applicationLayer.Payload()))
 		if v, ok := iPPortFileMap.Load(key); ok {
 			if vv, ok := v.(int64); ok {
