@@ -95,7 +95,7 @@ func WireShark(deviceName string) {
 				paths := strings.Split(u.Path, "/")
 				fileName := paths[len(paths)-1]
 				if "" == fileName {
-					log.Errorf("为获取到文件名")
+					log.Errorf("未获取到文件名")
 					continue
 				}
 				m, err := url.ParseQuery(u.RawQuery)
@@ -144,7 +144,7 @@ func getFileSize(fileName string) int64 {
 		result = f.Size()
 		return nil
 	})
-	log.Infof("%s file size：%d", fileName, result)
+	log.Infof("getFileSize--->%s ：%d", fileName, result)
 	return result
 }
 
