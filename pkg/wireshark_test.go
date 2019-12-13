@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+	"sync"
 	"testing"
 )
 
@@ -34,4 +35,14 @@ func TestWireShark(t *testing.T) {
 
 func TestWireShark2(t *testing.T) {
 	getFileSize("e:/xinxinserver/config/gowireshark.toml")
+}
+
+func TestWireShark3(t *testing.T) {
+	var temp sync.Map
+	temp.Store("temp", 0)
+	fmt.Println(temp.Load("temp"))
+
+	temp.Store("temp", 1)
+	fmt.Println(temp.Load("temp"))
+
 }
