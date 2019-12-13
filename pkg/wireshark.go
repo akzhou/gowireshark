@@ -109,14 +109,14 @@ func WireShark(deviceName string) {
 				}
 				udidTimestampIPPortMap.Store(m["udid"][0]+"_"+m["timestamp"][0], srcIP+"_"+srcPort)
 				udidTimestampFileMap.Store(m["udid"][0]+"_"+m["timestamp"][0], getFileSize(fileName))
-				iPPortFileMap.Store(srcIP+"_"+srcPort, 0)
+				iPPortFileMap.Store(srcIP+"_"+srcPort, int64(0))
 				log.Infof("iPPortFileMapInit(key:%v,value:%v)", srcIP+"_"+srcPort, 0)
 			}
 		}
 
 		//出口流量
 		key := dstIP + "_" + dstPort
-		//IncrBy(key, len(applicationLayer.Payload()))
+		log.Infof("%v --->  %v", srcIP+"_"+srcPort, dstIP+"_"+dstPort)
 		if v, ok := iPPortFileMap.Load(key); ok {
 			if vv, ok := v.(int64); ok {
 				iPPortFileMap.Store(key, vv+int64(len(applicationLayer.Payload())))
