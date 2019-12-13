@@ -108,9 +108,9 @@ func WireShark(deviceName string) {
 					log.Error(fmt.Errorf("udid and timestamp not nil"))
 					continue
 				}
-				udidTimestampIPPortMap.LoadOrStore(m["udid"][0]+"_"+m["timestamp"][0], srcIP+"_"+srcPort)
-				udidTimestampFileMap.LoadOrStore(m["udid"][0]+"_"+m["timestamp"][0], getFileSize(fileName))
-				//iPPortFileMap.LoadOrStore(srcIP+"_"+srcPort, 0)
+				udidTimestampIPPortMap.Store(m["udid"][0]+"_"+m["timestamp"][0], srcIP+"_"+srcPort)
+				udidTimestampFileMap.Store(m["udid"][0]+"_"+m["timestamp"][0], getFileSize(fileName))
+				iPPortFileMap.Store(srcIP+"_"+srcPort, 0)
 				//log.Infof("iPPortFileMap(key:%v,value:%v)", srcIP+"_"+srcPort, 0)
 			}
 		}
@@ -153,11 +153,14 @@ func GetDownloading(udid, timestamp string) int {
 		if vv, ok := v.(int64); ok {
 			fileSize = vv
 		}
+		log.Infof("GetDownloading.udidTimestampFileMap(key:%v,value:%v)", udid+"_"+timestamp, v)
 	}
 
 	if v, ok := udidTimestampIPPortMap.Load(udid + "_" + timestamp); ok {
+		log.Infof("GetDownloading.udidTimestampIPPortMap(key:%v,value:%v)", udid+"_"+timestamp, v)
 		if vv, ok := v.(string); ok { //vv表示ip_port
-			if vvv, ok := iPPortFileMap.Load(vv); ok { //vvv下载量
+			if vvv, ok := iPPortFileMap.Load(vv); ok { //vvv下载量v
+				log.Infof("GetDownloading.iPPortFileMap(key:%v,value:%v)", udid+"_"+timestamp, vvv)
 				if vvvv, ok := vvv.(int64); ok {
 					downloadSize = vvvv
 				}
