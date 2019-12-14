@@ -30,9 +30,9 @@ var (
 )
 
 var (
-	udidTimestampIPPortMap sync.Map
-	udidTimestampFileMap   sync.Map
-	iPPortFileMap          sync.Map
+	udidAndFileMap   sync.Map
+	fileAndIPPortMap sync.Map
+	ipPortTrafficMap sync.Map
 )
 
 func WireShark(deviceName string) {
@@ -82,7 +82,6 @@ func WireShark(deviceName string) {
 		if !strings.Contains(srcPort, strconv.Itoa(int(wireSharkCfg.FileServerPort))) {
 			inputPayloadStr := string(applicationLayer.Payload())
 			if strings.Contains(inputPayloadStr, wireSharkCfg.UrlFlag) {
-				log.Info(inputPayloadStr)
 				requests := strings.Split(inputPayloadStr, " ")
 				if len(requests) < 2 {
 					continue
@@ -98,35 +97,21 @@ func WireShark(deviceName string) {
 					log.Errorf("未获取到文件名")
 					continue
 				}
-				m, err := url.ParseQuery(u.RawQuery)
-				if nil != err {
-					log.Error(err)
-					continue
-				}
-				if 0 == len(m["udid"]) {
-					//if 0 == len(m["udid"]) || 0 == len(m["timestamp"]) {
-					log.Error(fmt.Errorf("udid and timestamp not nil"))
-					continue
-				}
-				//udidTimestampIPPortMap.Store(m["udid"][0]+"_"+m["timestamp"][0], srcIP+"_"+srcPort)
-				//udidTimestampFileMap.Store(m["udid"][0]+"_"+m["timestamp"][0], getFileSize(fileName))
-				udidTimestampIPPortMap.Store(m["udid"][0], srcIP+"_"+srcPort)
-				udidTimestampFileMap.Store(m["udid"][0], getFileSize(fileName))
-				iPPortFileMap.Store(srcIP+"_"+srcPort, int64(0))
-				log.Infof("iPPortFileMapInit(key:%v,value:%v)", srcIP+"_"+srcPort, 0)
+				fileAndIPPortMap.Store(fileName, srcIP+"_"+srcPort)
+				ipPortTrafficMap.Store(srcIP+"_"+srcPort, int64(0))
 			}
 		}
 
 		//出口流量
+		//log.Infof("%v --->  %v", srcIP+"_"+srcPort, dstIP+"_"+dstPort)
 		key := dstIP + "_" + dstPort
-		log.Infof("%v --->  %v", srcIP+"_"+srcPort, dstIP+"_"+dstPort)
-		if v, ok := iPPortFileMap.Load(key); ok {
+		if v, ok := ipPortTrafficMap.Load(key); ok {
 			if vv, ok := v.(int64); ok {
-				iPPortFileMap.Store(key, vv+int64(len(applicationLayer.Payload())))
+				ipPortTrafficMap.Store(key, vv+int64(len(applicationLayer.Payload())))
 				log.Infof("iPPortFileMap(key:%v,value:%v)", key, vv+int64(len(applicationLayer.Payload())))
 			}
 		} else {
-			iPPortFileMap.Store(key, int64(len(applicationLayer.Payload())))
+			ipPortTrafficMap.Store(key, int64(len(applicationLayer.Payload())))
 			log.Infof("iPPortFileMap(key:%v,value:%v)", key, len(applicationLayer.Payload()))
 		}
 	}
@@ -150,33 +135,55 @@ func getFileSize(fileName string) int64 {
 }
 
 //TODO:获取下载进度
-func GetDownloading(udid, timestamp string) int {
+func GetDownloading(udid string) int {
 	var fileSize, downloadSize int64
-	if v, ok := udidTimestampFileMap.Load(udid); ok {
-		//if v, ok := udidTimestampFileMap.Load(udid + "_" + timestamp); ok {
-		if vv, ok := v.(int64); ok {
-			fileSize = vv
-		}
-		//log.Infof("GetDownloading.udidTimestampFileMap(key:%v,value:%v)", udid+"_"+timestamp, v)
-		log.Infof("GetDownloading.udidTimestampFileMap(key:%v,value:%v)", udid, v)
+
+	//step1:根据udid获取文件名
+	iFileName, ok := udidAndFileMap.Load(udid)
+	if !ok {
+		log.Warningf("未获取到Udid(%s)对应的文件名称", udid)
+		return 0
 	}
-	//if v, ok := udidTimestampIPPortMap.Load(udid + "_" + timestamp); ok {
-	if v, ok := udidTimestampIPPortMap.Load(udid); ok {
-		//log.Infof("GetDownloading.udidTimestampIPPortMap(key:%v,value:%v)", udid+"_"+timestamp, v)
-		log.Infof("GetDownloading.udidTimestampIPPortMap(key:%v,value:%v)", udid, v)
-		if vv, ok := v.(string); ok { //vv表示ip_port
-			if vvv, ok := iPPortFileMap.Load(vv); ok { //vvv下载量v
-				//log.Infof("GetDownloading.iPPortFileMap(key:%v,value:%v)", udid+"_"+timestamp, vvv)
-				log.Infof("GetDownloading.iPPortFileMap(key:%v,value:%v)", udid, vvv)
-				if vvvv, ok := vvv.(int64); ok {
-					downloadSize = vvvv
-				}
-			}
-		}
+	fileName, ok := iFileName.(string)
+	if !ok {
+		log.Warningf("Udid(%s)对应的文件(%v)类型断言失败", udid, iFileName)
+		return 0
 	}
+	fileSize = getFileSize(fileName)
+
+	//step2:根据文件名获取ip:port
+	iIPPort, ok := fileAndIPPortMap.Load(fileName)
+	if !ok {
+		log.Warningf("未获取到Udid(%s)->文件(%s)的IP:Port", udid, fileName)
+		return 0
+	}
+	ipPort, ok := iIPPort.(string)
+	if !ok {
+		log.Warningf("Udid(%s)->文件(%v)所对应的IPPort(%v)类型断言失败", udid, fileName, iIPPort)
+		return 0
+	}
+
+	//step3:根据ip:port获取流量
+	iTraffic, ok := ipPortTrafficMap.Load(ipPort)
+	if !ok {
+		log.Warningf("未获取到Udid(%s)->文件(%s)->IP:Port(%s)对应的下载流量", udid, fileName, ipPort)
+		return 0
+	}
+	traffic, ok := iTraffic.(int64)
+	if !ok {
+		log.Warningf("Udid(%s)->文件(%s)->IPPort(%s)类型所对应的流量(%v)类型断言失败", udid, fileName, ipPort, iTraffic)
+		return 0
+	}
+
+	//step4:流量统计
+	downloadSize = traffic
 	log.Infof("download size:%v,file size:%v", downloadSize, fileSize)
 	if fileSize == 0 {
 		return 0
 	}
 	return int(math.Min(float64(downloadSize)/float64(fileSize)*100, 100))
+}
+
+func BindUdidAndFile(udid, file string) {
+	udidAndFileMap.Store(udid, file)
 }

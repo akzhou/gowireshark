@@ -17,12 +17,38 @@ func main() {
 	go pkg.WireShark("eth0")
 
 	router := gin.Default()
+
+	router.POST("/bindUdidAndFile", func(c *gin.Context) {
+		req := struct {
+			Udid     string `json:"udid"`
+			FileName string `json:"fileName"`
+		}{}
+		err := c.BindJSON(&req)
+		if nil != err {
+			c.JSON(200, gin.H{
+				"Code":    -1,
+				"Message": err.Error(),
+			})
+			return
+		}
+		if req.Udid == "" || req.FileName == "" {
+			c.JSON(200, gin.H{
+				"Code":    -1,
+				"Message": "udid或fileName不能为空！",
+			})
+			return
+		}
+		pkg.BindUdidAndFile(req.Udid, req.FileName)
+		c.JSON(200, gin.H{
+			"Code":    0,
+			"Message": "Udid与文件关联成功！",
+		})
+	})
+
 	//TODO:获取下载进度
 	router.GET("/getDownloading", func(c *gin.Context) {
 		udid := c.Query("udid")
-		timestamp := c.Query("timestamp")
 		if udid == "" {
-			//if udid == "" || timestamp == "" {
 			c.JSON(200, gin.H{
 				"code":    -1,
 				"message": "udid不为空！",
@@ -30,7 +56,7 @@ func main() {
 			})
 			return
 		}
-		downloading := pkg.GetDownloading(udid, timestamp)
+		downloading := pkg.GetDownloading(udid)
 		c.JSON(200, gin.H{
 			"code":    0,
 			"message": "success",
