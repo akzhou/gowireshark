@@ -79,6 +79,16 @@ func WireShark(deviceName string) {
 			continue
 		}
 
+		if applicationLayer != nil {
+			fmt.Println("Application layer/Payload found.")
+			fmt.Printf("%s\n", applicationLayer.Payload())
+
+			// Search for a string inside the payload
+			if strings.Contains(string(applicationLayer.Payload()), "HTTPS") {
+				fmt.Println("HTTPS found!")
+			}
+		}
+
 		//入口流量
 		if !strings.Contains(srcPort, strconv.Itoa(int(wireSharkCfg.FileServerPort))) {
 			inputPayloadStr := string(applicationLayer.Payload())
