@@ -187,3 +187,7 @@ func GetDownloading(udid string) int {
 func BindUdidAndFile(udid, file string) {
 	udidAndFileMap.Store(udid, file)
 }
+
+func RemoveDownloading(udid string) {
+	udidAndFileMap.Delete(udid)
+}

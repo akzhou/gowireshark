@@ -10,6 +10,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"gowireshark/pkg"
 )
 
@@ -38,10 +39,38 @@ func main() {
 			})
 			return
 		}
+		log.Info("bindUdidAndFile,udid:%s,fileName:%s", req.Udid, req.FileName)
 		pkg.BindUdidAndFile(req.Udid, req.FileName)
 		c.JSON(200, gin.H{
 			"Code":    0,
 			"Message": "Udid与文件关联成功！",
+		})
+	})
+
+	router.POST("/removeDownloading", func(c *gin.Context) {
+		req := struct {
+			Udid string `json:"udid"`
+		}{}
+		err := c.BindJSON(&req)
+		if nil != err {
+			c.JSON(200, gin.H{
+				"Code":    -1,
+				"Message": err.Error(),
+			})
+			return
+		}
+		if req.Udid == "" {
+			c.JSON(200, gin.H{
+				"Code":    -1,
+				"Message": "udid不能为空！",
+			})
+			return
+		}
+		log.Info("removeDownloading,udid:%s", req.Udid)
+		pkg.RemoveDownloading(req.Udid)
+		c.JSON(200, gin.H{
+			"Code":    0,
+			"Message": "根据Udid删除下载进度成功！",
 		})
 	})
 
