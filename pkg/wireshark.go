@@ -83,6 +83,7 @@ func WireShark(deviceName string) {
 		if !strings.Contains(srcPort, strconv.Itoa(int(wireSharkCfg.FileServerPort))) {
 			inputPayloadStr := string(applicationLayer.Payload())
 			if strings.Contains(inputPayloadStr, wireSharkCfg.UrlFlag) { //applesign
+				log.Infof("request:%s", inputPayloadStr)
 				requests := strings.Split(inputPayloadStr, " ")
 				if len(requests) < 2 {
 					continue
