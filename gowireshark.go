@@ -22,7 +22,7 @@ func main() {
 
 	router := gin.Default()
 
-	router.Use(cors())
+	//router.Use(cors())
 
 	router.POST("/bindUdidAndFile", func(c *gin.Context) {
 		req := struct {
