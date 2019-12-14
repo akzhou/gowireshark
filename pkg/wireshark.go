@@ -64,6 +64,7 @@ func WireShark(deviceName string) {
 		if ipLayer != nil {
 			ip, _ := ipLayer.(*layers.IPv4)
 			srcIP = ip.SrcIP.String()
+
 			dstIP = ip.DstIP.String()
 		}
 
@@ -123,16 +124,17 @@ func WireShark(deviceName string) {
 		}
 
 		//出口流量
-		//log.Infof("%v --->  %v", srcIP+"_"+srcPort, dstIP+"_"+dstPort)
+
+		log.Infof("%v --->  %v", srcIP+"_"+srcPort, dstIP+"_"+dstPort)
 		//key := dstIP + "_" + dstPort
 		//if v, ok := ipPortTrafficMap.Load(key); ok {
 		//	if vv, ok := v.(int64); ok {
 		//		ipPortTrafficMap.Store(key, vv+int64(len(applicationLayer.Payload())))
-		//		log.Infof("iPPortFileMap(key:%v,value:%v)", key, vv+int64(len(applicationLayer.Payload())))
+		//		//log.Infof("iPPortFileMap(key:%v,value:%v)", key, vv+int64(len(applicationLayer.Payload())))
 		//	}
 		//} else {
 		//	ipPortTrafficMap.Store(key, int64(len(applicationLayer.Payload())))
-		//	log.Infof("iPPortFileMap(key:%v,value:%v)", key, len(applicationLayer.Payload()))
+		//	//log.Infof("iPPortFileMap(key:%v,value:%v)", key, len(applicationLayer.Payload()))
 		//}
 	}
 }
