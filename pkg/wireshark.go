@@ -15,7 +15,7 @@ import (
 	"github.com/google/gopacket/pcap"
 	log "github.com/sirupsen/logrus"
 	"math"
-	"net/url"
+	//"net/url"
 	"os"
 	"path/filepath"
 	"strconv"
