@@ -15,7 +15,7 @@ import (
 	"github.com/google/gopacket/pcap"
 	log "github.com/sirupsen/logrus"
 	"math"
-	//"net/url"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -64,7 +64,6 @@ func WireShark(deviceName string) {
 		if ipLayer != nil {
 			ip, _ := ipLayer.(*layers.IPv4)
 			srcIP = ip.SrcIP.String()
-
 			dstIP = ip.DstIP.String()
 		}
 
@@ -82,60 +81,43 @@ func WireShark(deviceName string) {
 
 		//入口流量
 		if !strings.Contains(srcPort, strconv.Itoa(int(wireSharkCfg.FileServerPort))) {
-			//inputPayloadStr := string(applicationLayer.Payload())
-			//log.Infof("request:%s", inputPayloadStr)
+			inputPayloadStr := string(applicationLayer.Payload())
+			log.Infof("request:%s", inputPayloadStr)
+			if strings.Contains(inputPayloadStr, wireSharkCfg.UrlFlag) { //applesign
 
-			var tls layers.TLS
-			var decoded []gopacket.LayerType
-			parser := gopacket.NewDecodingLayerParser(layers.LayerTypeTLS, &tls)
-			err := parser.DecodeLayers(packet.ApplicationLayer().LayerContents(), &decoded)
-			if err != nil {
-				return
-			}
-
-			for _, layerType := range decoded {
-				switch layerType {
-				case layers.LayerTypeTLS:
-					log.Infof("tls layer")
-					// do things with tls variable
+				requests := strings.Split(inputPayloadStr, " ")
+				if len(requests) < 2 {
+					continue
 				}
+				u, err := url.Parse(requests[1])
+				if nil != err {
+					log.Error(err)
+					continue
+				}
+				paths := strings.Split(u.Path, "/")
+				fileName := paths[len(paths)-1]
+				if "" == fileName {
+					log.Errorf("未获取到文件名")
+					continue
+				}
+				fileAndIPPortMap.Store(fileName, srcIP+"_"+srcPort)
+				ipPortTrafficMap.Store(srcIP+"_"+srcPort, int64(0))
+				fileSizeMap.Store(fileName, getFileSize(u.Path))
 			}
-
-			//if strings.Contains(inputPayloadStr, wireSharkCfg.UrlFlag) { //applesign
-			//	requests := strings.Split(inputPayloadStr, " ")
-			//	if len(requests) < 2 {
-			//		continue
-			//	}
-			//	u, err := url.Parse(requests[1])
-			//	if nil != err {
-			//		log.Error(err)
-			//		continue
-			//	}
-			//	paths := strings.Split(u.Path, "/")
-			//	fileName := paths[len(paths)-1]
-			//	if "" == fileName {
-			//		log.Errorf("未获取到文件名")
-			//		continue
-			//	}
-			//	fileAndIPPortMap.Store(fileName, srcIP+"_"+srcPort)
-			//	ipPortTrafficMap.Store(srcIP+"_"+srcPort, int64(0))
-			//	fileSizeMap.Store(fileName, getFileSize(u.Path))
-			//}
 		}
 
 		//出口流量
-
-		log.Infof("%v --->  %v", srcIP+"_"+srcPort, dstIP+"_"+dstPort)
-		//key := dstIP + "_" + dstPort
-		//if v, ok := ipPortTrafficMap.Load(key); ok {
-		//	if vv, ok := v.(int64); ok {
-		//		ipPortTrafficMap.Store(key, vv+int64(len(applicationLayer.Payload())))
-		//		//log.Infof("iPPortFileMap(key:%v,value:%v)", key, vv+int64(len(applicationLayer.Payload())))
-		//	}
-		//} else {
-		//	ipPortTrafficMap.Store(key, int64(len(applicationLayer.Payload())))
-		//	//log.Infof("iPPortFileMap(key:%v,value:%v)", key, len(applicationLayer.Payload()))
-		//}
+		//log.Infof("%v --->  %v", srcIP+"_"+srcPort, dstIP+"_"+dstPort)
+		key := dstIP + "_" + dstPort
+		if v, ok := ipPortTrafficMap.Load(key); ok {
+			if vv, ok := v.(int64); ok {
+				ipPortTrafficMap.Store(key, vv+int64(len(applicationLayer.Payload())))
+				log.Infof("iPPortFileMap(key:%v,value:%v)", key, vv+int64(len(applicationLayer.Payload())))
+			}
+		} else {
+			ipPortTrafficMap.Store(key, int64(len(applicationLayer.Payload())))
+			log.Infof("iPPortFileMap(key:%v,value:%v)", key, len(applicationLayer.Payload()))
+		}
 	}
 }
 
