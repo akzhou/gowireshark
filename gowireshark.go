@@ -21,10 +21,11 @@ func main() {
 	router.GET("/getDownloading", func(c *gin.Context) {
 		udid := c.Query("udid")
 		timestamp := c.Query("timestamp")
-		if udid == "" || timestamp == "" {
+		if udid == "" {
+			//if udid == "" || timestamp == "" {
 			c.JSON(200, gin.H{
 				"code":    -1,
-				"message": "udid及timestamp不为空！",
+				"message": "udid不为空！",
 				"data":    nil,
 			})
 			return
