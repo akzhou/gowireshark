@@ -17,20 +17,7 @@ import (
 
 type WireSharkConfig struct {
 	UrlFlag        string
-	UrlPath        string
 	FileServerPort uint16
-	//Redis   []struct {
-	//	Name         string
-	//	Addr         string
-	//	Active       int
-	//	Idle         int
-	//	DialTimeout  time.Duration
-	//	ReadTimeout  time.Duration
-	//	WriteTimeout time.Duration
-	//	IdleTimeout  time.Duration
-	//	DBNum        string
-	//	Password     string
-	//}
 }
 
 var (
@@ -56,16 +43,8 @@ func init() {
 		panic(err)
 	}
 
-	//if len(wireSharkCfg.Redis) == 0 {
-	//	panic(fmt.Errorf("未配置Redis"))
-	//}
-
 	if wireSharkCfg.UrlFlag == "" {
 		panic(fmt.Errorf("未配置UrlFlag"))
-	}
-
-	if wireSharkCfg.UrlPath == "" {
-		panic(fmt.Errorf("未配置UrlPath"))
 	}
 
 	if wireSharkCfg.FileServerPort == 0 {

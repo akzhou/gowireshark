@@ -82,7 +82,7 @@ func WireShark(deviceName string) {
 		//入口流量
 		if !strings.Contains(srcPort, strconv.Itoa(int(wireSharkCfg.FileServerPort))) {
 			inputPayloadStr := string(applicationLayer.Payload())
-			if strings.Contains(inputPayloadStr, wireSharkCfg.UrlFlag) {
+			if strings.Contains(inputPayloadStr, wireSharkCfg.UrlFlag) { //applesign
 				requests := strings.Split(inputPayloadStr, " ")
 				if len(requests) < 2 {
 					continue
@@ -100,7 +100,7 @@ func WireShark(deviceName string) {
 				}
 				fileAndIPPortMap.Store(fileName, srcIP+"_"+srcPort)
 				ipPortTrafficMap.Store(srcIP+"_"+srcPort, int64(0))
-				fileSizeMap.Store(fileName, getFileSize(fileName))
+				fileSizeMap.Store(fileName, getFileSize(u.Path))
 			}
 		}
 
@@ -125,19 +125,18 @@ func getFilter(port uint16) string {
 	return filter
 }
 
-func getFileSize(fileName string) int64 {
+func getFileSize(path string) int64 {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Errorf("getFileSize", err)
+			log.Errorf("getFileSize error:", err)
 		}
 	}()
-	fileName = wireSharkCfg.UrlPath + fileName
 	var result int64
-	filepath.Walk(fileName, func(path string, f os.FileInfo, err error) error {
+	filepath.Walk(path, func(path string, f os.FileInfo, err error) error {
 		result = f.Size()
 		return nil
 	})
-	log.Infof("getFileSize--->%s ：%d", fileName, result)
+	log.Infof("getFileSize--->%s ：%d", path, result)
 	return result
 }
 
