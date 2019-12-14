@@ -90,6 +90,7 @@ func main() {
 			})
 			return
 		}
+		log.Infof("remoteRemoteAddr:%v", c.Request.RemoteAddr)
 		downloading := pkg.GetDownloading(udid)
 		c.JSON(200, gin.H{
 			"code":    0,
