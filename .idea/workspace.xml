@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c19625a5-aa13-41f3-9037-0d68a15c527c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/gowireshark.go" beforeDir="false" afterPath="$PROJECT_DIR$/gowireshark.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/wireshark.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/wireshark.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,7 +21,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pkg/wireshark.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="2257">
@@ -57,11 +56,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/gowireshark.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="344">
-              <caret line="69" column="24" selection-start-line="69" selection-start-column="24" selection-end-line="69" selection-end-column="24" />
+            <state relative-caret-position="-1415">
+              <caret line="24" column="22" lean-forward="true" selection-start-line="24" selection-start-column="22" selection-end-line="24" selection-end-column="22" />
               <folding>
                 <element signature="e#127#184#0" expanded="true" />
               </folding>
@@ -139,8 +138,8 @@
         <option value="$PROJECT_DIR$/pkg/config.go" />
         <option value="$PROJECT_DIR$/pkg/redis_test.go" />
         <option value="$PROJECT_DIR$/pkg/wireshark_test.go" />
-        <option value="$PROJECT_DIR$/gowireshark.go" />
         <option value="$PROJECT_DIR$/pkg/wireshark.go" />
+        <option value="$PROJECT_DIR$/gowireshark.go" />
       </list>
     </option>
   </component>
@@ -298,7 +297,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14765458" />
@@ -477,22 +475,22 @@
     <entry file="file://$PROJECT_DIR$/go.sum">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/gowireshark.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
-          <caret line="69" column="24" selection-start-line="69" selection-start-column="24" selection-end-line="69" selection-end-column="24" />
-          <folding>
-            <element signature="e#127#184#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pkg/wireshark.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2257">
           <caret line="191" column="31" lean-forward="true" selection-start-line="191" selection-start-column="31" selection-end-line="191" selection-end-column="31" />
           <folding>
             <element signature="e#132#186#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gowireshark.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1415">
+          <caret line="24" column="22" lean-forward="true" selection-start-line="24" selection-start-column="22" selection-end-line="24" selection-end-column="22" />
+          <folding>
+            <element signature="e#127#184#0" expanded="true" />
           </folding>
         </state>
       </provider>
