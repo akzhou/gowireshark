@@ -33,6 +33,7 @@ var (
 	udidAndFileMap   sync.Map
 	fileAndIPPortMap sync.Map
 	ipPortTrafficMap sync.Map
+	fileSizeMap      sync.Map
 )
 
 func WireShark(deviceName string) {
@@ -99,6 +100,7 @@ func WireShark(deviceName string) {
 				}
 				fileAndIPPortMap.Store(fileName, srcIP+"_"+srcPort)
 				ipPortTrafficMap.Store(srcIP+"_"+srcPort, int64(0))
+				fileSizeMap.Store(fileName, getFileSize(fileName))
 			}
 		}
 
@@ -124,6 +126,11 @@ func getFilter(port uint16) string {
 }
 
 func getFileSize(fileName string) int64 {
+	defer func() {
+		if err := recover(); err != nil {
+			log.Errorf("getFileSize", err)
+		}
+	}()
 	fileName = wireSharkCfg.UrlPath + fileName
 	var result int64
 	filepath.Walk(fileName, func(path string, f os.FileInfo, err error) error {
@@ -138,7 +145,7 @@ func getFileSize(fileName string) int64 {
 func GetDownloading(udid string) int {
 	var fileSize, downloadSize int64
 
-	//step1:根据udid获取文件名
+	//step1:根据udid获取文件
 	iFileName, ok := udidAndFileMap.Load(udid)
 	if !ok {
 		log.Warningf("未获取到Udid(%s)对应的文件名称", udid)
@@ -149,7 +156,23 @@ func GetDownloading(udid string) int {
 		log.Warningf("Udid(%s)对应的文件(%v)类型断言失败", udid, iFileName)
 		return 0
 	}
-	fileSize = getFileSize(fileName)
+	if fileName == "" {
+		log.Warningf("Udid(%s)对应的文件(%v)名为空", udid, iFileName)
+		return 0
+	}
+
+	//step1.1:根据文件名获取文件大小
+	iFileSize, ok := fileSizeMap.Load(fileName)
+	if !ok {
+		log.Warningf("未获取到Udid(%s)->文件(%s)的大小", udid, fileName)
+		return 0
+	}
+	tempFileSize, ok := iFileSize.(int64)
+	if !ok {
+		log.Warningf("Udid(%s)->文件(%v)所对应的IPPort(%v)类型断言失败", udid, fileName, iFileSize)
+		return 0
+	}
+	fileSize = tempFileSize
 
 	//step2:根据文件名获取ip:port
 	iIPPort, ok := fileAndIPPortMap.Load(fileName)
@@ -189,5 +212,37 @@ func BindUdidAndFile(udid, file string) {
 }
 
 func RemoveDownloading(udid string) {
+	//step1:根据udid获取文件
+	iFileName, ok := udidAndFileMap.Load(udid)
+	if !ok {
+		log.Warningf("RemoveDownloading:未获取到Udid(%s)对应的文件名称", udid)
+		return
+	}
+	fileName, ok := iFileName.(string)
+	if !ok {
+		log.Warningf("RemoveDownloading:Udid(%s)对应的文件(%v)类型断言失败", udid, iFileName)
+		return
+	}
+	if fileName == "" {
+		log.Warningf("RemoveDownloading:Udid(%s)对应的文件(%v)名为空", udid, iFileName)
+		return
+	}
+
+	//step2:根据文件名获取ip:port
+	iIPPort, ok := fileAndIPPortMap.Load(fileName)
+	if !ok {
+		log.Warningf("RemoveDownloading:未获取到Udid(%s)->文件(%s)的IP:Port", udid, fileName)
+		return
+	}
+	ipPort, ok := iIPPort.(string)
+	if !ok {
+		log.Warningf("RemoveDownloading:Udid(%s)->文件(%v)所对应的IPPort(%v)类型断言失败", udid, fileName, iIPPort)
+		return
+	}
+
 	udidAndFileMap.Delete(udid)
+
+	fileAndIPPortMap.Delete(fileName)
+
+	ipPortTrafficMap.Delete(ipPort)
 }

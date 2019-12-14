@@ -44,7 +44,7 @@ func main() {
 			})
 			return
 		}
-		log.Info("bindUdidAndFile,udid:%s,fileName:%s", req.Udid, req.FileName)
+		log.Infof("bindUdidAndFile,udid:%s,fileName:%s", req.Udid, req.FileName)
 		pkg.BindUdidAndFile(req.Udid, req.FileName)
 		c.JSON(200, gin.H{
 			"Code":    0,
@@ -71,7 +71,7 @@ func main() {
 			})
 			return
 		}
-		log.Info("removeDownloading,udid:%s", req.Udid)
+		log.Infof("removeDownloading,udid:%s", req.Udid)
 		pkg.RemoveDownloading(req.Udid)
 		c.JSON(200, gin.H{
 			"Code":    0,
